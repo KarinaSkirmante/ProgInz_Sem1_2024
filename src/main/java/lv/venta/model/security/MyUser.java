@@ -1,4 +1,4 @@
-package lv.venta.model;
+package lv.venta.model.security;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,33 +6,38 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
+
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "MyAuthority")
-public class MyAuthority {
+@Table(name = "MyUser")
+public class MyUser {
 	@Setter(value = AccessLevel.NONE)
-	@Column(name = "AuthorityId")
+	@Column(name = "UserId")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)//autoincrement
-	private int authorityId;
+	private int userId;
 	
-	@Column(name = "Title")
-	@Pattern(regexp = "[A-Z]{4,7}")
-	private String title;
+	@Column(name = "Username")
+	private String username;
+	
+	@Column(name = "Password")
+	private String password;
 
-	public MyAuthority(@Pattern(regexp = "[A-Z]{4,7}") String title) {
-		this.title = title;
+	public MyUser(String username, String password) {
+		this.username = username;
+		this.password = password;
 	}
 	
 	
+
 }
