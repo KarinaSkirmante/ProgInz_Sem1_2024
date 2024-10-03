@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -33,10 +35,17 @@ public class MyUser {
 	@Column(name = "Password")
 	private String password;
 
-	public MyUser(String username, String password) {
+	@ManyToOne
+	@JoinColumn(name = "AuthorityId")
+	private MyAuthority authority;
+
+	public MyUser(String username, String password, MyAuthority authority) {
 		this.username = username;
 		this.password = password;
+		this.authority = authority;
 	}
+	
+
 	
 	
 
