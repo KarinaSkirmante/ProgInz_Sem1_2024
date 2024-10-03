@@ -2,6 +2,7 @@ package lv.venta.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -16,33 +17,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 	
+	
 	@Bean
-	public UserDetailsManager createDemoUsers() {
-		
+	public MyUserDetailsManager getDetailsService() {
+		return new MyUserDetailsManager();
+	}
+	
+	@Bean
+	public DaoAuthenticationProvider createProvider() {
+		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-		
-		
-		UserDetails details1 = User.builder()
-				.username("karina.krinkele")
-				.password(encoder.encode("123"))
-				.authorities("USER")
-				.build();
-		
-		
-		UserDetails details2 = User.builder()
-				.username("janis.berzins")
-				.password(encoder.encode("321"))
-				.authorities("ADMIN")
-				.build();
-		
-		UserDetails details3 = User.builder()
-				.username("liga.jauka")
-				.password(encoder.encode("987"))
-				.authorities("USER")
-				.build();
-		
-		return new InMemoryUserDetailsManager(details1, details2, details3);
-		
+
+		provider.setPasswordEncoder(encoder);
+		provider.setUserDetailsService(getDetailsService());
+		return provider;
 		
 	}
 	
