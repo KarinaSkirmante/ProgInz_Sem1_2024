@@ -4,29 +4,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
+import org.springframework.http.HttpStatus;import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import lv.venta.model.Product;
 
-@Controller
+@RestController
 public class FirstController {
 	
 	
 	@GetMapping("/hello") //localhost:8080/hello
-	public String getHello() {
+	public ResponseEntity<String> getHello() {
 		System.out.println("First controller works");
-		return "hello-page"; //tiks parādīta hello-page.html lapa
+		return new ResponseEntity<String>("First controller works", HttpStatus.OK);
 	}
 	//TODO uztaisīt plāšaku html lapu
 	//TODO jaunu kontrolieru funkciju, kas parāda citu html lapu
 	
 	Random rand = new Random();
 	@GetMapping("/hello/msg") //localhost:8080/hello/msg
-	public String getHelloMsg(Model model) {
-		model.addAttribute("mydata", "Ziņa no Karinas:" + rand.nextInt(0, 100));
-		return "hello-msg-page";//tiks parādīta hello-msg-page.html, ar padotajiem datiem
+	public ResponseEntity<String> getHelloMsg() {
+		return new ResponseEntity<String>("Ziņa no Karinas:" + rand.nextInt(0, 100), HttpStatus.OK);
 	}
 	
 	//TODO izveidot kontroliera funkciju, 
@@ -34,11 +36,11 @@ public class FirstController {
 	//(izveidojam šajā fukcijā jebkādu produktu
 	
 	@GetMapping("/product/test")//localhost:8080/product/test
-	public String getProductTest(Model model)
+	public ResponseEntity<Product> getProductTest()
 	{
 		Product product = new Product("Abols", 0.99f, "Sarkans un garšīgs", 4);
-		model.addAttribute("mydata", product);
-		return "product-show-one-page";//tiks parādīta product-show-one-page.html lapa ar ābola produktu
+		
+		return new ResponseEntity<Product>(product, HttpStatus.OK );
 	}
 	
 	//TODO izveidot kontroliera dunkciju, kura ieksienē uztaisīt 3 produktus
@@ -46,7 +48,7 @@ public class FirstController {
 	//hmtl lapā
 	
 	@GetMapping("/product/test/all")//localhost:8080/product/test/all
-	public String getProductTestAll(Model model) {
+	public ResponseEntity<ArrayList<Product>> getProductTestAll() {
 		ArrayList<Product> allProducts = new ArrayList<>(
 				Arrays.asList(
 						new Product("Abols", 0.99f, "Sarkans un garšīgs", 4),
@@ -54,9 +56,8 @@ public class FirstController {
 						new Product("Gurkis", 2.99f, "Zaļš un garšīgs", 1)));
 	
 		
-		model.addAttribute("mydata", allProducts);
-		return "product-show-all-page";//tiks parādīta product-show-all-page.html lapa ar visiem produktiem
-
+		return new ResponseEntity<ArrayList<Product>>(allProducts, HttpStatus.OK);
+	
 	
 	}
 	
