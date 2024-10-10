@@ -18,7 +18,7 @@ public class ProductServiceImpl implements
 	private IProductRepo productRepo;
 	
 	@Override
-	public void create(Product product) {
+	public Product create(Product product) {
 		
 		Product existedProduct = 
 			productRepo.findByTitleAndDescriptionAndPrice(product.getTitle(),
@@ -27,11 +27,11 @@ public class ProductServiceImpl implements
 		if(existedProduct != null) {
 			existedProduct.setQuantity(existedProduct.getQuantity() + product.getQuantity());
 			productRepo.save(existedProduct);
-			return;
+			return existedProduct;
 		}
 		
 		//tomēr tāds produkts man nav repo un DB
-		productRepo.save(product);
+		return productRepo.save(product);
 		
 	}
 
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements
 	}
 
 	@Override
-	public void updateById(int id, Product product) throws Exception{
+	public Product updateById(int id, Product product) throws Exception{
 		//1. solis atrast objektu
 		Product productForUpdating = retrieveById(id);
 		
@@ -70,15 +70,16 @@ public class ProductServiceImpl implements
 		productForUpdating.setQuantity(product.getQuantity());
 		
 		//3. saglaba rediģēto objektu arī repo un DB
-		productRepo.save(productForUpdating);//save šeit strādās kā update
+		return productRepo.save(productForUpdating);//save šeit strādās kā update
 	}
 
 	@Override
-	public void deleteById(int id) throws Exception {
+	public Product deleteById(int id) throws Exception {
 		//1. solis atrast proeduktu, kuru gribam dzēst
 		Product productForDeleting = retrieveById(id);
 		//2. dzesam no repo un DB
 		productRepo.delete(productForDeleting);
+		return productForDeleting;
 		
 	}
 	

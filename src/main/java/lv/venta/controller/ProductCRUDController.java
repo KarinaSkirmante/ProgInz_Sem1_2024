@@ -3,20 +3,26 @@ package lv.venta.controller;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import lv.venta.model.Product;
 import lv.venta.service.IProductCRUDService;
 
-@Controller
+@RestController
 @RequestMapping("/product/crud")
 public class ProductCRUDController {
 
@@ -24,107 +30,77 @@ public class ProductCRUDController {
 	private IProductCRUDService crudService;
 
 	@GetMapping("/all") // localhost:8080/product/crud/all
-	public String getProductCRUDAll(Model model) {
+	public ResponseEntity<?> getProductCRUDAll() {
 		try {
 			ArrayList<Product> allProducts = crudService.retrieveAll();
-			model.addAttribute("mydata", allProducts);
-			model.addAttribute("msg", "All products");
-			return "product-show-all-page";// tiks parādīta producty-show-all-page.html ar visiem produktiem
+			return new ResponseEntity<ArrayList<Product>> (allProducts, HttpStatus.OK);
+
 		} catch (Exception e) {
-			model.addAttribute("mydata", e.getMessage());
-			return "error-page";
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
 		}
 	}
 
 	@GetMapping("/one") // localhost:8080/product/crud/one?id=2
-	public String getProductCRUDOne(@RequestParam("id") int id, Model model) {
+	public ResponseEntity<?> getProductCRUDOne(@RequestParam("id") int id) {
 		try {
 			Product foundProduct = crudService.retrieveById(id);
-			model.addAttribute("mydata", foundProduct);
-			return "product-show-one-page";// tiks parādīta product-show-one-page.html lapa
+			return new ResponseEntity<Product>(foundProduct, HttpStatus.OK);
 		} catch (Exception e) {
-			model.addAttribute("mydata", e.getMessage());
-			return "error-page";
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
 	@GetMapping("/all/{id}") // localhost:8080/product/crud/all/2
-	public String getProductCRUDById(@PathVariable("id") int id, Model model) {
+	public ResponseEntity<?> getProductCRUDById(@PathVariable("id") int id, Model model) {
 		try {
 			Product foundProduct = crudService.retrieveById(id);
-			model.addAttribute("mydata", foundProduct);
-			return "product-show-one-page";// tiks parādīta product-show-one-page.html lapa
+			return new ResponseEntity<Product>(foundProduct, HttpStatus.OK);
 		} catch (Exception e) {
-			model.addAttribute("mydata", e.getMessage());
-			return "error-page";
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@GetMapping("/insert") // localhost:8080/product/crud/insert
-	public String getProductCRUDInsert(Model model) {
-
-		model.addAttribute("product", new Product());
-		return "product-insert-page"; // tiks parādīta product-insert-page.html lapa ar iedotu tuksu produktu
-
-	}
 
 	@PostMapping("/insert")
-	public String postProductCRUDInsert(@Valid Product product, BindingResult result) {// ienāk aizpildītais produkts
+	public ResponseEntity<?> postProductCRUDInsert(@RequestBody @Valid Product product, BindingResult result) {// ienāk aizpildītais produkts
 		// vai ir kādi validācijas pāŗkāpumi
 		if (result.hasErrors()) {
-			return "product-insert-page"; // turpinām palikt product-insert-page.html lapā
+			return new ResponseEntity<String>("Error with data validation " + result.getFieldError().getField(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
-			crudService.create(product);
-			return "redirect:/product/crud/all";
+			Product returnProduct = crudService.create(product);
+			return new ResponseEntity<Product>(returnProduct, HttpStatus.OK);
 		}
 
 	}
 
-	// TODO
-	/// update
-	@GetMapping("/update/{id}") // localhost:8080/product/crud/update/1
-	public String getProductCRUDUpdateById(@PathVariable("id") int id, Model model) {
-		try {
-			Product productForUpdating = crudService.retrieveById(id);
-			model.addAttribute("product", productForUpdating);
-			model.addAttribute("id", id);
-			return "product-update-page"; // parādām product-update-page.html lapu, padodot atlasīto produktu
-		} catch (Exception e) {
-			model.addAttribute("mydata", e.getMessage());
-			return "error-page";
-		}
-	}
 
-	@PostMapping("/update/{id}")
-	public String postProductCRUDUpdateById(@PathVariable("id") int id, @Valid Product product, BindingResult result,
-			Model model) {
+	@PutMapping("/update/{id}")
+	public ResponseEntity<?> postProductCRUDUpdateById(@PathVariable("id") int id, @RequestBody @Valid Product product, BindingResult result) {
 		if (result.hasErrors()) {
-			return "product-update-page";
+			return new ResponseEntity<String>("Error with data validation " + result.getFieldError().getField(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 
 			try {
-				crudService.updateById(id, product);
-				return "redirect:/product/crud/all/" + id; // pārlecu uz /product/crud/all/{id} galapunktu
+				Product updatedProduct =crudService.updateById(id, product);
+				return new ResponseEntity<Product>(updatedProduct,HttpStatus.OK);			
 			} catch (Exception e) {
-				model.addAttribute("mydata", e.getMessage());
-				return "error-page";
+				return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 
 	}
 	//TODO
-	@GetMapping("/delete/{id}")//localhost:8080/product/crud/delete/1
-	public String getProductCRUDDeleteById(@PathVariable("id") int id, Model model) {
+	@DeleteMapping("/delete/{id}")//localhost:8080/product/crud/delete/1
+	public ResponseEntity<?> getProductCRUDDeleteById(@PathVariable("id") int id) {
 		
 		try {
-			crudService.deleteById(id);
-			ArrayList<Product> allProducts = crudService.retrieveAll();
-			model.addAttribute("mydata", allProducts);
-			return "product-show-all-page";// tiks parādīta producty-show-all-page.html ar visiem produktiem
-	
+			Product deletedProduct = crudService.deleteById(id);
+		
+			return new ResponseEntity<Product>(deletedProduct, HttpStatus.OK);
+		
 		} catch (Exception e) {
-			model.addAttribute("mydata", e.getMessage());
-			return "error-page";
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 	}
