@@ -3,7 +3,6 @@ package lv.venta.service;
 import java.util.ArrayList;
 
 import lv.venta.model.Product;
-import lv.venta.model.dto.ProductDTOForBuy;
 import lv.venta.model.dto.PurchaseDTO;
 
 public interface IWebStoreService {
