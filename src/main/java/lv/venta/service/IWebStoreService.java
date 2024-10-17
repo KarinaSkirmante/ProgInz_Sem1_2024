@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import lv.venta.model.Product;
 import lv.venta.model.dto.ProductDTOForBuy;
+import lv.venta.model.dto.PurchaseDTO;
 
 public interface IWebStoreService {
-	ArrayList<Product> buy(ArrayList<ProductDTOForBuy> products) throws Exception;
+	ArrayList<Product> buy(PurchaseDTO purchase) throws Exception;
 
 }

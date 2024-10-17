@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lv.venta.model.Product;
 import lv.venta.model.dto.ProductDTOForBuy;
+import lv.venta.model.dto.PurchaseDTO;
 import lv.venta.repo.IProductRepo;
 import lv.venta.service.IWebStoreService;
 
@@ -18,7 +19,9 @@ public class WebStoreServiceImpl implements IWebStoreService {
 	
 	
 	@Override
-	public ArrayList<Product> buy(ArrayList<ProductDTOForBuy> products) throws Exception {
+	public ArrayList<Product> buy(PurchaseDTO purchase) throws Exception {
+		ArrayList<ProductDTOForBuy> products = purchase.getProducts();
+		
 		if(products != null && !products.isEmpty())
 		{
 			ArrayList<Product> result = new ArrayList<>();

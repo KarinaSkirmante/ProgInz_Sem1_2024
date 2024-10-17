@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lv.venta.model.Product;
 import lv.venta.model.dto.ProductDTOForBuy;
+import lv.venta.model.dto.PurchaseDTO;
 import lv.venta.service.IWebStoreService;
 
 @RestController
@@ -23,11 +24,11 @@ public class WebStoreController {
 	
 	
 	@PostMapping("/buy")//localhost:8080/store/buy
-	public ResponseEntity<?> postBuyProducts(@RequestBody ArrayList<ProductDTOForBuy> productsToBuy){
+	public ResponseEntity<?> postBuyProducts(@RequestBody PurchaseDTO purchase){
 		
 		try
 		{
-			ArrayList<Product> result = webService.buy(productsToBuy);
+			ArrayList<Product> result = webService.buy(purchase);
 			return new ResponseEntity<ArrayList<Product>>(result, HttpStatus.OK);
 		}
 		catch (Exception e) {
