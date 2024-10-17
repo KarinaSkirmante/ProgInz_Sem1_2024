@@ -1,4 +1,6 @@
 package lv.venta.model;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,6 +33,7 @@ public class Product {
 	@Column(name = "Id")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)//autoincrement
+	@JsonIgnore
 	private int id;
 		
 	@NotNull
