@@ -37,7 +37,7 @@ public class ProgInzSeminar1Application {
 				System.out.println("All products: " + productRepo.findAll());
 				//pamegināt dzesānu
 				Product productForDeleting = productRepo.findById(2).get();
-				productRepo.delete(productForDeleting);
+				//productRepo.delete(productForDeleting);
 				//iztisīt update caur repo
 				Product productForUpdating = productRepo.findById(1).get();
 				productForUpdating.setPrice(0.55f);
