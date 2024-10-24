@@ -1,6 +1,7 @@
 package lv.venta.service.impl;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,11 @@ public class ProductServiceImpl implements
 		
 		if(productRepo.existsById(id))
 		{
-			return productRepo.findById(id).get();
+			Optional<Product> optProd = productRepo.findById(id);
+			if(optProd.isPresent()) {
+				return optProd.get();
+			}
+			throw new Exception("Problems with product id ("+id+") ");
 		}
 		else
 		{

@@ -65,7 +65,7 @@ public class ProductCRUDController {
 	@PostMapping("/insert")
 	public ResponseEntity<?> postProductCRUDInsert(@RequestBody @Valid Product product, BindingResult result) {// ienāk aizpildītais produkts
 		// vai ir kādi validācijas pāŗkāpumi
-		if (result.hasErrors()) {
+		if (result.hasErrors() && result.getFieldError() != null) {
 			return new ResponseEntity<String>("Error with data validation " + result.getFieldError().getField(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			Product returnProduct = crudService.create(product);
@@ -77,7 +77,7 @@ public class ProductCRUDController {
 
 	@PutMapping("/update/{id}")
 	public ResponseEntity<?> postProductCRUDUpdateById(@PathVariable("id") int id, @RequestBody @Valid Product product, BindingResult result) {
-		if (result.hasErrors()) {
+		if (result.hasErrors() && result.getFieldError() != null) {
 			return new ResponseEntity<String>("Error with data validation " + result.getFieldError().getField(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 
