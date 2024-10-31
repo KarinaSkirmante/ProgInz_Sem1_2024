@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -19,7 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lv.venta.model.Product;
 import lv.venta.service.IProductCRUDService;
@@ -59,6 +63,29 @@ class ProductCrudControllerTest {
 				.andExpect((ResultMatcher) content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect((ResultMatcher) jsonPath("$[0].title", "Galds"))
 				.andExpect((ResultMatcher) jsonPath("$[1].title", "Kresls"));
+
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	
+	@Test
+	void testPostInsertController() {
+		Product p1 = new Product("Mape", 2.3f, "Zila", 2);
+
+		try
+		{
+			when(productService.create(p1)).thenReturn(p1);
+			
+			mockMVC.perform(MockMvcRequestBuilders.post("/product/crud/insert")
+			.content(new ObjectMapper().writeValueAsString(p1))
+			.contentType(MediaType.APPLICATION_JSON)
+			.accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect((ResultMatcher) jsonPath("$.title", "Mape"));
 
 		}
 		catch (Exception e) {
