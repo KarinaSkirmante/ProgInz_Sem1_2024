@@ -14,7 +14,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 
-@SpringBootTest
 class ProductTest {
 
 	private static Product productDefault;
