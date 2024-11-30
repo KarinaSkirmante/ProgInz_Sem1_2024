@@ -9,7 +9,7 @@ import lv.venta.model.ParcelMachine;
 public interface IOmnivaService {
 	
 	List<Location> fetchDataFromOmniva() throws Exception;
-	void saveAndUpdateParcelMachines();
+	void saveAndUpdateParcelMachines()  throws Exception ;
 	
 	
 	ArrayList<ParcelMachine> retrieveAllParcelMachines();  
