@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -18,6 +19,8 @@ import lv.venta.model.ParcelMachine;
 import lv.venta.repo.IGlobalParamsRepo;
 import lv.venta.repo.IParcelMachineRepo;
 
+
+@Service
 public class OmnivaServiceImpl implements IOmnivaService{
 
 	
@@ -50,7 +53,7 @@ public class OmnivaServiceImpl implements IOmnivaService{
 	@Override
 	
 	//@Scheduled(cron = "0 0 4 * * *") <- katru dienu četros no rīta
-	@Scheduled(cron = "0 4 11 * * *") // <- katru dienu 10:30
+	@Scheduled(cron = "0 10 11 * * *") // <- katru dienu 10:30
 	//@Scheduled(cron = "0 30 10 * * 6") // <- katru sestdienu 10:30
 	public void saveAndUpdateParcelMachines() throws Exception {
 		System.out.println("Load data in DB");
