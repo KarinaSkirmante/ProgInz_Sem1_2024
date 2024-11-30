@@ -6,4 +6,6 @@ import lv.venta.model.GlobalParams;
 
 public interface IGlobalParamsRepo extends CrudRepository<GlobalParams, Integer> {
 
+	GlobalParams findByParamTitle(String string);
+
 }
